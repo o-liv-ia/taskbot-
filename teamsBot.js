@@ -7,18 +7,21 @@ const fetch = require("node-fetch");
 let creds = require("./creds.json");
 
 async function getIssueCount(url, data) {
-  console.log(data);
-  console.log("check 1")
+  //context.sendActivity(data.text())
+  console.log(data)
   const response = await fetch(url, {
-    method: "POST",
-    body: data,
-    headers:
-    {
-      "Content-Type" : "application/json"
+    method: 'GET',
+    //body: data,
+    host:"https://badgerloop.atlassian.net",
+    port: 443,
+    path: creds.jiraPath,
+    headers: {
+              "Authorization": "Basic " + new Buffer.from(creds.jiraEmail + ":" + creds.jiraAPIToken).toString("base64"),
+              "Content-Type": "application/json"}
     }
-  });
-  console.log(response);
-  console.log("check 2")
+  )
+  console.log(response)
+  
   return response.text();
 }
 
@@ -56,15 +59,15 @@ class TeamsBot extends TeamsActivityHandler {
         }
 
         case "issue": {
-          let apiresp = await getIssueCount("https://badgerloop.atlassian.net/rest/api/2/search?jql=project=EL&maxResults=1000", 
-          {"host": creds.jiraWebHook,
-          "port": 443,
-          "path": creds.jiraPath,
-          "headers": {
+          let apiresp = await getIssueCount('https://badgerloop.atlassian.net/rest/api/2/search?jql=project=EL%20AND%20(status=%27To%20Do%27%20OR%20status%20=%20%27In%20Progress%27)',{host:"https://badgerloop.atlassian.net",
+          port: 443,
+          path: creds.jiraPath,
+          method: "GET",
+          headers: {
               "Authorization": "Basic " + new Buffer.from(creds.jiraEmail + ":" + creds.jiraAPIToken).toString("base64"),
-              "Content-Type": "application/json"}});
-            //how to set content-type, set to JSON
-          context.sendActivity(apiresp)
+              "Content-Type": "application/json"}}
+              );
+          context.sendActivity(apiresp);
           break;
 
         }

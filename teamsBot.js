@@ -16,7 +16,7 @@ async function getIssueCount(url, data) {
     port: 443,
     path: creds.jiraPath,
     headers: {
-              "Authorization": "Basic " + new Buffer.from(creds.jiraEmail + ":" + creds.jiraAPIToken).toString("base64"),
+              "Authorization": "Basic " + new Buffer(creds.jiraEmail + ":" + creds.jiraAPIToken).toString("base64"),
               "Content-Type": "application/json"}
     }
   )
@@ -64,7 +64,7 @@ class TeamsBot extends TeamsActivityHandler {
           path: creds.jiraPath,
           method: "GET",
           headers: {
-              "Authorization": "Basic " + new Buffer.from(creds.jiraEmail + ":" + creds.jiraAPIToken).toString("base64"),
+              "Authorization": "Basic " + new Buffer(creds.jiraEmail + ":" + creds.jiraAPIToken).toString("base64"),
               "Content-Type": "application/json"}}
               );
           context.sendActivity(apiresp);
